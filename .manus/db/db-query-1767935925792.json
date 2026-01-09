@@ -1,0 +1,35 @@
+{
+  "query": "SELECT id, name, slug FROM categories;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user JmMmfJyACb82Q1K.1778369c6e1d --database 4XRQMDgKnjQJFfMtfJU5D3 --execute SELECT id, name, slug FROM categories;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Processos Financeiros",
+      "slug": "processos-financeiros"
+    },
+    {
+      "id": "2",
+      "name": "Planejamento Financeiro",
+      "slug": "planejamento-financeiro"
+    },
+    {
+      "id": "3",
+      "name": "Fluxo de Caixa",
+      "slug": "fluxo-de-caixa"
+    },
+    {
+      "id": "4",
+      "name": "Gestão Financeira",
+      "slug": "gestao-financeira"
+    },
+    {
+      "id": "5",
+      "name": "FIDC",
+      "slug": "fidc"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tslug\n1\tProcessos Financeiros\tprocessos-financeiros\n2\tPlanejamento Financeiro\tplanejamento-financeiro\n3\tFluxo de Caixa\tfluxo-de-caixa\n4\tGestão Financeira\tgestao-financeira\n5\tFIDC\tfidc\n",
+  "stderr": "",
+  "execution_time_ms": 62
+}

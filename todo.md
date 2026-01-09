@@ -34,5 +34,5 @@
 - [x] Copiar assets (logos, imagens) para o projeto
 
 ## Migração de Dados
-- [ ] Migrar posts do banco de dados existente
-- [ ] Migrar categorias do banco de dados existente
+- [x] Migrar posts do banco de dados existente (11 posts migrados)
+- [x] Migrar categorias do banco de dados existente (5 categorias)
