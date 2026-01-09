@@ -67,3 +67,6 @@
 ## Tags do Blog
 - [x] Criar tags: Dicas, PME, Estratégia, Crescimento, Controle, Eficiência, Gestão, Finanças
 - [x] Associar tags aos 11 posts existentes
+
+## Ajustes Visuais
+- [x] Ajustar posicionamento da imagem hero para mostrar rosto completo da consultora

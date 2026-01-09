@@ -78,7 +78,7 @@ export default function Home() {
           <img 
             src="/images/ana-flavia.png" 
             alt="Ana Flávia Krisanovski"
-            className="w-full h-full object-cover object-right"
+            className="w-full h-full object-cover object-[center_top]"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-white via-white/90 to-transparent" />
         </div>
