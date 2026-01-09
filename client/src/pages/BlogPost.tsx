@@ -18,6 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Streamdown } from "streamdown";
+import { ImageGallery } from "@/components/ImageGallery";
 
 export default function BlogPost() {
   const params = useParams();
@@ -25,6 +26,12 @@ export default function BlogPost() {
   const [copied, setCopied] = useState(false);
 
   const { data: post, isLoading } = trpc.posts.getBySlug.useQuery({ slug });
+  
+  // Fetch gallery images for this post
+  const { data: galleryImages } = trpc.gallery.getByPost.useQuery(
+    { postId: post?.id || 0 },
+    { enabled: !!post?.id }
+  );
 
   const formatDate = (date: Date | null) => {
     if (!date) return "";
@@ -154,6 +161,11 @@ export default function BlogPost() {
           <div className="prose prose-lg max-w-none mb-12 prose-headings:font-heading prose-headings:text-afk-gray-dark prose-a:text-afk-yellow-dark prose-a:no-underline hover:prose-a:underline">
             <Streamdown>{post.content}</Streamdown>
           </div>
+
+          {/* Image Gallery */}
+          {galleryImages && galleryImages.length > 0 && (
+            <ImageGallery images={galleryImages} className="mb-12" />
+          )}
 
           {/* Share */}
           <div className="border-t border-b py-6 mb-12">

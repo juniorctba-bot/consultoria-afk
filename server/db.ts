@@ -1,6 +1,6 @@
 import { eq, desc, and, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, categories, posts, contactSubmissions, InsertCategory, InsertPost, InsertContactSubmission, Category, Post } from "../drizzle/schema";
+import { InsertUser, users, categories, posts, contactSubmissions, postGalleryImages, InsertCategory, InsertPost, InsertContactSubmission, InsertPostGalleryImage, Category, Post, PostGalleryImage } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -255,4 +255,44 @@ export async function deleteContactSubmission(id: number): Promise<void> {
   if (!db) throw new Error("Database not available");
   
   await db.delete(contactSubmissions).where(eq(contactSubmissions.id, id));
+}
+
+// ==================== GALLERY FUNCTIONS ====================
+
+export async function getPostGalleryImages(postId: number): Promise<PostGalleryImage[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(postGalleryImages)
+    .where(eq(postGalleryImages.postId, postId))
+    .orderBy(postGalleryImages.sortOrder);
+}
+
+export async function addGalleryImage(data: InsertPostGalleryImage): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(postGalleryImages).values(data);
+  return Number(result[0].insertId);
+}
+
+export async function updateGalleryImage(id: number, data: Partial<InsertPostGalleryImage>): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(postGalleryImages).set(data).where(eq(postGalleryImages.id, id));
+}
+
+export async function deleteGalleryImage(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(postGalleryImages).where(eq(postGalleryImages.id, id));
+}
+
+export async function deleteAllPostGalleryImages(postId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(postGalleryImages).where(eq(postGalleryImages.postId, postId));
 }

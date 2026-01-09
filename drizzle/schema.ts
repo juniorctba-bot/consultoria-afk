@@ -70,3 +70,18 @@ export const contactSubmissions = mysqlTable("contact_submissions", {
 
 export type ContactSubmission = typeof contactSubmissions.$inferSelect;
 export type InsertContactSubmission = typeof contactSubmissions.$inferInsert;
+
+/**
+ * Post gallery images table
+ */
+export const postGalleryImages = mysqlTable("post_gallery_images", {
+  id: int("id").autoincrement().primaryKey(),
+  postId: int("postId").references(() => posts.id).notNull(),
+  imageUrl: text("imageUrl").notNull(),
+  caption: varchar("caption", { length: 255 }),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type PostGalleryImage = typeof postGalleryImages.$inferSelect;
+export type InsertPostGalleryImage = typeof postGalleryImages.$inferInsert;

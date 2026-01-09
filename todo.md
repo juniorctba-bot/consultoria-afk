@@ -36,3 +36,10 @@
 ## Migração de Dados
 - [x] Migrar posts do banco de dados existente (11 posts migrados)
 - [x] Migrar categorias do banco de dados existente (5 categorias)
+
+## Galeria de Imagens nos Posts
+- [x] Criar tabela de imagens de galeria no banco de dados
+- [x] Criar componente de galeria de imagens com lightbox
+- [x] Adicionar upload múltiplo de imagens no editor de posts
+- [x] Exibir galeria na página do post
+- [x] Copiar imagens enviadas pelo usuário para o projeto

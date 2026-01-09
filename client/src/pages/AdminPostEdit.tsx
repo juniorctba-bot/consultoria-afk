@@ -12,7 +12,11 @@ import {
   Upload,
   Image as ImageIcon,
   Loader2,
-  X
+  X,
+  Plus,
+  Trash2,
+  GripVertical,
+  Images
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +30,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { trpc } from "@/lib/trpc";
 import { useState, useEffect, useRef } from "react";
 import { Link, useParams, useLocation } from "wouter";
@@ -81,7 +92,11 @@ function PostEditor() {
   const isNew = !postId;
   
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [uploadingGallery, setUploadingGallery] = useState(false);
+  const [galleryDialogOpen, setGalleryDialogOpen] = useState(false);
+  const [newImageCaption, setNewImageCaption] = useState("");
   
   const [formData, setFormData] = useState({
     title: "",
@@ -98,6 +113,13 @@ function PostEditor() {
     { enabled: !!postId }
   );
   const { data: categories } = trpc.categories.list.useQuery();
+  
+  // Gallery queries
+  const { data: galleryImages, refetch: refetchGallery } = trpc.gallery.getByPost.useQuery(
+    { postId: postId! },
+    { enabled: !!postId }
+  );
+  const utils = trpc.useUtils();
 
   const createMutation = trpc.posts.create.useMutation({
     onSuccess: (data) => {
@@ -127,6 +149,36 @@ function PostEditor() {
     onError: () => {
       toast.error("Erro ao enviar imagem.");
       setUploading(false);
+    }
+  });
+
+  // Gallery mutations
+  const addGalleryMutation = trpc.gallery.add.useMutation({
+    onSuccess: () => {
+      toast.success("Imagem adicionada à galeria!");
+      refetchGallery();
+      setUploadingGallery(false);
+      setNewImageCaption("");
+    },
+    onError: () => {
+      toast.error("Erro ao adicionar imagem.");
+      setUploadingGallery(false);
+    }
+  });
+
+  const deleteGalleryMutation = trpc.gallery.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Imagem removida da galeria!");
+      refetchGallery();
+    },
+    onError: () => {
+      toast.error("Erro ao remover imagem.");
+    }
+  });
+
+  const updateGalleryMutation = trpc.gallery.update.useMutation({
+    onSuccess: () => {
+      refetchGallery();
     }
   });
 
@@ -188,6 +240,56 @@ function PostEditor() {
       });
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploadingGallery(true);
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      
+      if (!file.type.startsWith("image/")) {
+        toast.error(`${file.name} não é uma imagem válida.`);
+        continue;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error(`${file.name} excede 5MB.`);
+        continue;
+      }
+
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64 = (reader.result as string).split(",")[1];
+        
+        // First upload the image
+        const uploadResult = await uploadMutation.mutateAsync({
+          filename: file.name,
+          contentType: file.type,
+          base64Data: base64,
+        });
+
+        // Then add to gallery
+        if (postId && uploadResult.url) {
+          await addGalleryMutation.mutateAsync({
+            postId: postId,
+            imageUrl: uploadResult.url,
+            caption: newImageCaption || undefined,
+            sortOrder: (galleryImages?.length || 0) + i,
+          });
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDeleteGalleryImage = (id: number) => {
+    if (confirm("Tem certeza que deseja remover esta imagem da galeria?")) {
+      deleteGalleryMutation.mutate({ id });
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -316,6 +418,79 @@ function PostEditor() {
               />
             </div>
           </div>
+
+          {/* Gallery Section - Only show for existing posts */}
+          {!isNew && postId && (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-afk-gray-dark flex items-center gap-2">
+                  <Images className="w-5 h-5" />
+                  Galeria de Imagens
+                </h3>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => galleryInputRef.current?.click()}
+                  disabled={uploadingGallery}
+                >
+                  {uploadingGallery ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Plus className="w-4 h-4 mr-2" />
+                  )}
+                  Adicionar Imagens
+                </Button>
+              </div>
+
+              <input
+                ref={galleryInputRef}
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleGalleryUpload}
+                className="hidden"
+              />
+
+              {galleryImages && galleryImages.length > 0 ? (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {galleryImages.map((image, index) => (
+                    <div 
+                      key={image.id} 
+                      className="relative group aspect-square bg-gray-100 rounded-lg overflow-hidden"
+                    >
+                      <img
+                        src={image.imageUrl}
+                        alt={image.caption || `Imagem ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleDeleteGalleryImage(image.id)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                      {image.caption && (
+                        <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-2">
+                          <p className="text-white text-xs truncate">{image.caption}</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <Images className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                  <p>Nenhuma imagem na galeria</p>
+                  <p className="text-sm">Clique em "Adicionar Imagens" para começar</p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Sidebar */}
@@ -414,6 +589,19 @@ function PostEditor() {
               />
             </div>
           </div>
+
+          {/* Gallery Info for new posts */}
+          {isNew && (
+            <div className="bg-amber-50 rounded-xl border border-amber-200 p-6">
+              <h3 className="font-semibold text-amber-800 flex items-center gap-2 mb-2">
+                <Images className="w-5 h-5" />
+                Galeria de Imagens
+              </h3>
+              <p className="text-sm text-amber-700">
+                Salve o post primeiro para adicionar imagens à galeria.
+              </p>
+            </div>
+          )}
         </div>
       </form>
     </div>

@@ -223,6 +223,58 @@ export const appRouter = router({
       }),
   }),
 
+  // ==================== GALLERY ====================
+  gallery: router({
+    getByPost: publicProcedure
+      .input(z.object({ postId: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getPostGalleryImages(input.postId);
+      }),
+    
+    add: adminProcedure
+      .input(z.object({
+        postId: z.number(),
+        imageUrl: z.string(),
+        caption: z.string().optional(),
+        sortOrder: z.number().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const id = await db.addGalleryImage({
+          postId: input.postId,
+          imageUrl: input.imageUrl,
+          caption: input.caption || null,
+          sortOrder: input.sortOrder || 0,
+        });
+        return { success: true, id };
+      }),
+    
+    update: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        caption: z.string().optional(),
+        sortOrder: z.number().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        await db.updateGalleryImage(id, data);
+        return { success: true };
+      }),
+    
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.deleteGalleryImage(input.id);
+        return { success: true };
+      }),
+    
+    deleteAll: adminProcedure
+      .input(z.object({ postId: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.deleteAllPostGalleryImages(input.postId);
+        return { success: true };
+      }),
+  }),
+
   // ==================== CONTACT ====================
   contact: router({
     submit: publicProcedure
