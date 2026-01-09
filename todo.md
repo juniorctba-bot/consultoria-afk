@@ -53,3 +53,10 @@
 - [x] Criar página de listagem por tag
 - [x] Adicionar nuvem de tags no blog
 - [x] Gerenciamento de tags no painel admin
+
+## Sistema de Busca
+- [x] Criar endpoint de busca no backend
+- [x] Adicionar campo de busca na página do blog
+- [x] Criar página de resultados de busca
+- [x] Implementar busca por título, conteúdo e resumo
+- [x] Destacar termos buscados nos resultados

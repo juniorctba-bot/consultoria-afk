@@ -13,6 +13,7 @@ import Contato from "./pages/Contato";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import BlogTag from "./pages/BlogTag";
+import BlogSearch from "./pages/BlogSearch";
 
 // Admin pages
 import Admin from "./pages/Admin";
@@ -32,6 +33,7 @@ function Router() {
       <Route path="/contato" component={Contato} />
       <Route path="/blog" component={Blog} />
       <Route path="/blog/tag/:slug" component={BlogTag} />
+      <Route path="/blog/busca" component={BlogSearch} />
       <Route path="/blog/:slug" component={BlogPost} />
       
       {/* Admin routes */}

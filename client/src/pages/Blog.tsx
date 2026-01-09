@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useSearch } from "wouter";
+import { Link, useSearch, useLocation } from "wouter";
 import { Search, Calendar, ArrowRight, Tag, Hash } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -50,16 +50,24 @@ export default function Blog() {
             </p>
             
             {/* Search */}
-            <div className="relative max-w-md mx-auto">
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (searchTerm.trim()) {
+                  window.location.href = `/blog/busca?q=${encodeURIComponent(searchTerm.trim())}`;
+                }
+              }}
+              className="relative max-w-md mx-auto"
+            >
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <Input
                 type="text"
-                placeholder="Buscar artigos..."
+                placeholder="Buscar artigos... (pressione Enter)"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-12 py-6 bg-white/10 border-white/20 text-white placeholder:text-gray-400"
               />
-            </div>
+            </form>
           </div>
         </div>
       </section>

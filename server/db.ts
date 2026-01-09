@@ -1,4 +1,4 @@
-import { eq, desc, and, sql } from "drizzle-orm";
+import { eq, and, desc, sql, or, like } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, categories, posts, contactSubmissions, postGalleryImages, tags, postTags, InsertCategory, InsertPost, InsertContactSubmission, InsertPostGalleryImage, InsertTag, InsertPostTag, Category, Post, PostGalleryImage, Tag, PostTag } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -426,4 +426,25 @@ export async function getTagsWithPostCount(): Promise<(Tag & { postCount: number
   );
   
   return tagsWithCount;
+}
+
+
+// ==================== SEARCH FUNCTIONS ====================
+
+export async function searchPosts(query: string): Promise<Post[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const searchTerm = `%${query}%`;
+  
+  return await db.select().from(posts)
+    .where(and(
+      eq(posts.published, true),
+      or(
+        like(posts.title, searchTerm),
+        like(posts.excerpt, searchTerm),
+        like(posts.content, searchTerm)
+      )
+    ))
+    .orderBy(desc(posts.publishedAt));
 }

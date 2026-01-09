@@ -116,6 +116,19 @@ export const appRouter = router({
       }));
     }),
     
+    search: publicProcedure
+      .input(z.object({ query: z.string().min(1) }))
+      .query(async ({ input }) => {
+        const posts = await db.searchPosts(input.query);
+        const categories = await db.getAllCategories();
+        const categoryMap = new Map(categories.map(c => [c.id, c]));
+        
+        return posts.map(post => ({
+          ...post,
+          category: post.categoryId ? categoryMap.get(post.categoryId) : null,
+        }));
+      }),
+    
     getBySlug: publicProcedure
       .input(z.object({ slug: z.string() }))
       .query(async ({ input }) => {
