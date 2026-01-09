@@ -12,12 +12,14 @@ import Sobre from "./pages/Sobre";
 import Contato from "./pages/Contato";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import BlogTag from "./pages/BlogTag";
 
 // Admin pages
 import Admin from "./pages/Admin";
 import AdminPosts from "./pages/AdminPosts";
 import AdminPostEdit from "./pages/AdminPostEdit";
 import AdminCategorias from "./pages/AdminCategorias";
+import AdminTags from "./pages/AdminTags";
 import AdminContatos from "./pages/AdminContatos";
 
 function Router() {
@@ -29,6 +31,7 @@ function Router() {
       <Route path="/sobre" component={Sobre} />
       <Route path="/contato" component={Contato} />
       <Route path="/blog" component={Blog} />
+      <Route path="/blog/tag/:slug" component={BlogTag} />
       <Route path="/blog/:slug" component={BlogPost} />
       
       {/* Admin routes */}
@@ -36,6 +39,7 @@ function Router() {
       <Route path="/admin/posts" component={AdminPosts} />
       <Route path="/admin/posts/:id" component={AdminPostEdit} />
       <Route path="/admin/categorias" component={AdminCategorias} />
+      <Route path="/admin/tags" component={AdminTags} />
       <Route path="/admin/contatos" component={AdminContatos} />
       
       {/* Fallback */}

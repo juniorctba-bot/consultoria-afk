@@ -43,3 +43,13 @@
 - [x] Adicionar upload múltiplo de imagens no editor de posts
 - [x] Exibir galeria na página do post
 - [x] Copiar imagens enviadas pelo usuário para o projeto
+
+## Sistema de Tags
+- [x] Criar tabela de tags no banco de dados
+- [x] Criar tabela de relacionamento posts-tags
+- [x] Criar endpoints CRUD para tags
+- [x] Adicionar seleção de tags no editor de posts
+- [x] Exibir tags na página do post
+- [x] Criar página de listagem por tag
+- [x] Adicionar nuvem de tags no blog
+- [x] Gerenciamento de tags no painel admin

@@ -8,7 +8,8 @@ import {
   Twitter, 
   Linkedin,
   Copy,
-  CheckCircle
+  CheckCircle,
+  Hash
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -29,6 +30,12 @@ export default function BlogPost() {
   
   // Fetch gallery images for this post
   const { data: galleryImages } = trpc.gallery.getByPost.useQuery(
+    { postId: post?.id || 0 },
+    { enabled: !!post?.id }
+  );
+
+  // Fetch tags for this post
+  const { data: postTags } = trpc.tags.getPostTags.useQuery(
     { postId: post?.id || 0 },
     { enabled: !!post?.id }
   );
@@ -165,6 +172,27 @@ export default function BlogPost() {
           {/* Image Gallery */}
           {galleryImages && galleryImages.length > 0 && (
             <ImageGallery images={galleryImages} className="mb-12" />
+          )}
+
+          {/* Tags */}
+          {postTags && postTags.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2 mb-8">
+              <span className="text-afk-gray font-medium flex items-center gap-1">
+                <Hash className="w-4 h-4" />
+                Tags:
+              </span>
+              {postTags.map((tag) => (
+                <Link key={tag.id} href={`/blog/tag/${tag.slug}`}>
+                  <span
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors hover:opacity-80"
+                    style={{ backgroundColor: tag.color || "#FFCE00", color: "#333" }}
+                  >
+                    <Hash className="w-3 h-3" />
+                    {tag.name}
+                  </span>
+                </Link>
+              ))}
+            </div>
           )}
 
           {/* Share */}

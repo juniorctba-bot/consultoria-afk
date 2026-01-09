@@ -12,7 +12,8 @@ import {
   Eye,
   EyeOff,
   Loader2,
-  Search
+  Search,
+  Tag
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,6 +45,7 @@ const navItems = [
   { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/admin/posts", icon: FileText, label: "Posts" },
   { href: "/admin/categorias", icon: FolderOpen, label: "Categorias" },
+  { href: "/admin/tags", icon: Tag, label: "Tags" },
   { href: "/admin/contatos", icon: MessageSquare, label: "Contatos" },
 ];
 

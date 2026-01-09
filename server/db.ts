@@ -1,6 +1,6 @@
 import { eq, desc, and, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, categories, posts, contactSubmissions, postGalleryImages, InsertCategory, InsertPost, InsertContactSubmission, InsertPostGalleryImage, Category, Post, PostGalleryImage } from "../drizzle/schema";
+import { InsertUser, users, categories, posts, contactSubmissions, postGalleryImages, tags, postTags, InsertCategory, InsertPost, InsertContactSubmission, InsertPostGalleryImage, InsertTag, InsertPostTag, Category, Post, PostGalleryImage, Tag, PostTag } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -295,4 +295,135 @@ export async function deleteAllPostGalleryImages(postId: number): Promise<void> 
   if (!db) throw new Error("Database not available");
   
   await db.delete(postGalleryImages).where(eq(postGalleryImages.postId, postId));
+}
+
+// ==================== TAG FUNCTIONS ====================
+
+export async function getAllTags(): Promise<Tag[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(tags).orderBy(tags.name);
+}
+
+export async function getTagBySlug(slug: string): Promise<Tag | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(tags).where(eq(tags.slug, slug)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getTagById(id: number): Promise<Tag | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(tags).where(eq(tags.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createTag(data: InsertTag): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(tags).values(data);
+  return Number(result[0].insertId);
+}
+
+export async function updateTag(id: number, data: Partial<InsertTag>): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(tags).set(data).where(eq(tags.id, id));
+}
+
+export async function deleteTag(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // First delete all post-tag relationships
+  await db.delete(postTags).where(eq(postTags.tagId, id));
+  // Then delete the tag
+  await db.delete(tags).where(eq(tags.id, id));
+}
+
+// ==================== POST-TAG FUNCTIONS ====================
+
+export async function getPostTags(postId: number): Promise<Tag[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const result = await db
+    .select({ tag: tags })
+    .from(postTags)
+    .innerJoin(tags, eq(postTags.tagId, tags.id))
+    .where(eq(postTags.postId, postId));
+  
+  return result.map(r => r.tag);
+}
+
+export async function getPostsByTag(tagId: number): Promise<Post[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const result = await db
+    .select({ post: posts })
+    .from(postTags)
+    .innerJoin(posts, eq(postTags.postId, posts.id))
+    .where(and(eq(postTags.tagId, tagId), eq(posts.published, true)))
+    .orderBy(desc(posts.publishedAt));
+  
+  return result.map(r => r.post);
+}
+
+export async function setPostTags(postId: number, tagIds: number[]): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // Delete existing tags for this post
+  await db.delete(postTags).where(eq(postTags.postId, postId));
+  
+  // Insert new tags
+  if (tagIds.length > 0) {
+    const values = tagIds.map(tagId => ({ postId, tagId }));
+    await db.insert(postTags).values(values);
+  }
+}
+
+export async function addPostTag(postId: number, tagId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.insert(postTags).values({ postId, tagId });
+}
+
+export async function removePostTag(postId: number, tagId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(postTags).where(and(eq(postTags.postId, postId), eq(postTags.tagId, tagId)));
+}
+
+export async function getTagsWithPostCount(): Promise<(Tag & { postCount: number })[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const allTags = await db.select().from(tags).orderBy(tags.name);
+  
+  const tagsWithCount = await Promise.all(
+    allTags.map(async (tag) => {
+      const countResult = await db
+        .select({ count: sql<number>`COUNT(*)` })
+        .from(postTags)
+        .innerJoin(posts, eq(postTags.postId, posts.id))
+        .where(and(eq(postTags.tagId, tag.id), eq(posts.published, true)));
+      
+      return {
+        ...tag,
+        postCount: Number(countResult[0]?.count || 0),
+      };
+    })
+  );
+  
+  return tagsWithCount;
 }

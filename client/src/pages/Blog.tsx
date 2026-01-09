@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useSearch } from "wouter";
-import { Search, Calendar, ArrowRight, Tag } from "lucide-react";
+import { Search, Calendar, ArrowRight, Tag, Hash } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ export default function Blog() {
     categorySlug ? { categorySlug } : undefined
   );
   const { data: categories } = trpc.categories.list.useQuery();
+  const { data: tags } = trpc.tags.listWithCount.useQuery();
 
   const filteredPosts = posts?.filter(post => 
     post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -88,6 +89,27 @@ export default function Blog() {
               </Link>
             ))}
           </div>
+          
+          {/* Tags Cloud */}
+          {tags && tags.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2 justify-center mt-4 pt-4 border-t border-gray-200">
+              <span className="text-sm text-afk-gray flex items-center gap-1">
+                <Hash className="w-4 h-4" />
+                Tags:
+              </span>
+              {tags.map((tag) => (
+                <Link key={tag.id} href={`/blog/tag/${tag.slug}`}>
+                  <span
+                    className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition-colors hover:opacity-80"
+                    style={{ backgroundColor: tag.color || "#FFCE00", color: "#333" }}
+                  >
+                    {tag.name}
+                    <span className="opacity-70">({tag.postCount})</span>
+                  </span>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

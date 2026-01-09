@@ -13,7 +13,8 @@ import {
   EyeOff,
   Loader2,
   Mail,
-  MailOpen
+  MailOpen,
+  Tag
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
@@ -36,6 +37,7 @@ const navItems = [
   { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/admin/posts", icon: FileText, label: "Posts" },
   { href: "/admin/categorias", icon: FolderOpen, label: "Categorias" },
+  { href: "/admin/tags", icon: Tag, label: "Tags" },
   { href: "/admin/contatos", icon: MessageSquare, label: "Contatos" },
 ];
 

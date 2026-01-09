@@ -85,3 +85,29 @@ export const postGalleryImages = mysqlTable("post_gallery_images", {
 
 export type PostGalleryImage = typeof postGalleryImages.$inferSelect;
 export type InsertPostGalleryImage = typeof postGalleryImages.$inferInsert;
+
+/**
+ * Tags table for blog posts
+ */
+export const tags = mysqlTable("tags", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 50 }).notNull(),
+  slug: varchar("slug", { length: 50 }).notNull().unique(),
+  color: varchar("color", { length: 7 }).default("#FFCE00"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Tag = typeof tags.$inferSelect;
+export type InsertTag = typeof tags.$inferInsert;
+
+/**
+ * Post-Tags relationship table (many-to-many)
+ */
+export const postTags = mysqlTable("post_tags", {
+  id: int("id").autoincrement().primaryKey(),
+  postId: int("postId").references(() => posts.id).notNull(),
+  tagId: int("tagId").references(() => tags.id).notNull(),
+});
+
+export type PostTag = typeof postTags.$inferSelect;
+export type InsertPostTag = typeof postTags.$inferInsert;

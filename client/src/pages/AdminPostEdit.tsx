@@ -16,7 +16,9 @@ import {
   Plus,
   Trash2,
   GripVertical,
-  Images
+  Images,
+  Tag,
+  Hash
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,6 +48,7 @@ const navItems = [
   { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/admin/posts", icon: FileText, label: "Posts" },
   { href: "/admin/categorias", icon: FolderOpen, label: "Categorias" },
+  { href: "/admin/tags", icon: Tag, label: "Tags" },
   { href: "/admin/contatos", icon: MessageSquare, label: "Contatos" },
 ];
 
@@ -107,12 +110,20 @@ function PostEditor() {
     categoryId: null as number | null,
     published: false,
   });
+  const [selectedTags, setSelectedTags] = useState<number[]>([]);
 
   const { data: post, isLoading: postLoading } = trpc.posts.getById.useQuery(
     { id: postId! },
     { enabled: !!postId }
   );
   const { data: categories } = trpc.categories.list.useQuery();
+  const { data: allTags } = trpc.tags.list.useQuery();
+  
+  // Tags queries
+  const { data: postTags, refetch: refetchTags } = trpc.tags.getPostTags.useQuery(
+    { postId: postId! },
+    { enabled: !!postId }
+  );
   
   // Gallery queries
   const { data: galleryImages, refetch: refetchGallery } = trpc.gallery.getByPost.useQuery(
@@ -122,7 +133,11 @@ function PostEditor() {
   const utils = trpc.useUtils();
 
   const createMutation = trpc.posts.create.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
+      // Save tags for the new post
+      if (selectedTags.length > 0) {
+        await setTagsMutation.mutateAsync({ postId: data.id, tagIds: selectedTags });
+      }
       toast.success("Post criado com sucesso!");
       setLocation(`/admin/posts/${data.id}`);
     },
@@ -132,7 +147,11 @@ function PostEditor() {
   });
 
   const updateMutation = trpc.posts.update.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
+      // Save tags for the post
+      if (postId) {
+        await setTagsMutation.mutateAsync({ postId, tagIds: selectedTags });
+      }
       toast.success("Post atualizado com sucesso!");
     },
     onError: (error) => {
@@ -195,6 +214,18 @@ function PostEditor() {
       });
     }
   }, [post]);
+
+  useEffect(() => {
+    if (postTags) {
+      setSelectedTags(postTags.map(t => t.id));
+    }
+  }, [postTags]);
+
+  const setTagsMutation = trpc.tags.setPostTags.useMutation({
+    onSuccess: () => {
+      refetchTags();
+    }
+  });
 
   const generateSlug = (title: string) => {
     return title
@@ -532,6 +563,48 @@ function PostEditor() {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          {/* Tags */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
+            <h3 className="font-semibold text-afk-gray-dark flex items-center gap-2">
+              <Hash className="w-4 h-4" />
+              Tags
+            </h3>
+            
+            {allTags && allTags.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {allTags.map((tag) => {
+                  const isSelected = selectedTags.includes(tag.id);
+                  return (
+                    <button
+                      key={tag.id}
+                      type="button"
+                      onClick={() => {
+                        if (isSelected) {
+                          setSelectedTags(prev => prev.filter(id => id !== tag.id));
+                        } else {
+                          setSelectedTags(prev => [...prev, tag.id]);
+                        }
+                      }}
+                      className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                        isSelected
+                          ? "ring-2 ring-offset-1 ring-afk-gray-dark"
+                          : "opacity-60 hover:opacity-100"
+                      }`}
+                      style={{ backgroundColor: tag.color || "#FFCE00", color: "#333" }}
+                    >
+                      <Hash className="w-3 h-3" />
+                      {tag.name}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500">
+                Nenhuma tag cadastrada. <Link href="/admin/tags" className="text-afk-yellow-dark hover:underline">Criar tags</Link>
+              </p>
+            )}
           </div>
 
           {/* Featured Image */}

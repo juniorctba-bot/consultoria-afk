@@ -275,6 +275,87 @@ export const appRouter = router({
       }),
   }),
 
+  // ==================== TAGS ====================
+  tags: router({
+    list: publicProcedure.query(async () => {
+      return await db.getAllTags();
+    }),
+    
+    listWithCount: publicProcedure.query(async () => {
+      return await db.getTagsWithPostCount();
+    }),
+    
+    getBySlug: publicProcedure
+      .input(z.object({ slug: z.string() }))
+      .query(async ({ input }) => {
+        return await db.getTagBySlug(input.slug);
+      }),
+    
+    getPostsByTag: publicProcedure
+      .input(z.object({ tagId: z.number() }))
+      .query(async ({ input }) => {
+        const posts = await db.getPostsByTag(input.tagId);
+        const categories = await db.getAllCategories();
+        const categoryMap = new Map(categories.map(c => [c.id, c]));
+        
+        return posts.map(post => ({
+          ...post,
+          category: post.categoryId ? categoryMap.get(post.categoryId) : null,
+        }));
+      }),
+    
+    getPostTags: publicProcedure
+      .input(z.object({ postId: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getPostTags(input.postId);
+      }),
+    
+    create: adminProcedure
+      .input(z.object({
+        name: z.string().min(1),
+        slug: z.string().optional(),
+        color: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const slug = input.slug || generateSlug(input.name);
+        const id = await db.createTag({ ...input, slug });
+        const tag = await db.getTagBySlug(slug);
+        return { success: true, id, ...tag };
+      }),
+    
+    update: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        name: z.string().min(1).optional(),
+        slug: z.string().optional(),
+        color: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        await db.updateTag(id, data);
+        const tags = await db.getAllTags();
+        const tag = tags.find(t => t.id === id);
+        return { success: true, ...tag };
+      }),
+    
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.deleteTag(input.id);
+        return { success: true };
+      }),
+    
+    setPostTags: adminProcedure
+      .input(z.object({
+        postId: z.number(),
+        tagIds: z.array(z.number()),
+      }))
+      .mutation(async ({ input }) => {
+        await db.setPostTags(input.postId, input.tagIds);
+        return { success: true };
+      }),
+  }),
+
   // ==================== CONTACT ====================
   contact: router({
     submit: publicProcedure
