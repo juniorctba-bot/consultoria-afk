@@ -1,11 +1,10 @@
-import { eq } from "drizzle-orm";
+import { eq, desc, and, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, categories, posts, contactSubmissions, InsertCategory, InsertPost, InsertContactSubmission, Category, Post } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
-// Lazily create the drizzle instance so local tooling can run without a DB.
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
@@ -17,6 +16,8 @@ export async function getDb() {
   }
   return _db;
 }
+
+// ==================== USER FUNCTIONS ====================
 
 export async function upsertUser(user: InsertUser): Promise<void> {
   if (!user.openId) {
@@ -85,8 +86,173 @@ export async function getUserByOpenId(openId: string) {
   }
 
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
-
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// ==================== CATEGORY FUNCTIONS ====================
+
+export async function getAllCategories(): Promise<Category[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const result = await db.select().from(categories).orderBy(categories.name);
+  return result;
+}
+
+export async function getCategoryBySlug(slug: string): Promise<Category | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(categories).where(eq(categories.slug, slug)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getCategoryById(id: number): Promise<Category | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(categories).where(eq(categories.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createCategory(data: InsertCategory): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.insert(categories).values(data);
+}
+
+export async function updateCategory(id: number, data: Partial<InsertCategory>): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(categories).set(data).where(eq(categories.id, id));
+}
+
+export async function deleteCategory(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(categories).where(eq(categories.id, id));
+}
+
+// ==================== POST FUNCTIONS ====================
+
+export async function getAllPosts(includeUnpublished = false): Promise<Post[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  if (includeUnpublished) {
+    return await db.select().from(posts).orderBy(desc(posts.createdAt));
+  }
+  
+  return await db.select().from(posts).where(eq(posts.published, true)).orderBy(desc(posts.publishedAt));
+}
+
+export async function getPostsByCategory(categoryId: number): Promise<Post[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(posts)
+    .where(and(eq(posts.categoryId, categoryId), eq(posts.published, true)))
+    .orderBy(desc(posts.publishedAt));
+}
+
+export async function getPostBySlug(slug: string): Promise<Post | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(posts).where(eq(posts.slug, slug)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getPostById(id: number): Promise<Post | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(posts).where(eq(posts.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createPost(data: InsertPost): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(posts).values(data);
+  return Number(result[0].insertId);
+}
+
+export async function updatePost(id: number, data: Partial<InsertPost>): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(posts).set(data).where(eq(posts.id, id));
+}
+
+export async function deletePost(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(posts).where(eq(posts.id, id));
+}
+
+export async function getRelatedPosts(postId: number, categoryId: number | null, limit = 3): Promise<Post[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  if (!categoryId) {
+    return await db.select().from(posts)
+      .where(and(eq(posts.published, true), sql`${posts.id} != ${postId}`))
+      .orderBy(desc(posts.publishedAt))
+      .limit(limit);
+  }
+  
+  return await db.select().from(posts)
+    .where(and(
+      eq(posts.published, true),
+      eq(posts.categoryId, categoryId),
+      sql`${posts.id} != ${postId}`
+    ))
+    .orderBy(desc(posts.publishedAt))
+    .limit(limit);
+}
+
+export async function getRecentPosts(limit = 5): Promise<Post[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(posts)
+    .where(eq(posts.published, true))
+    .orderBy(desc(posts.publishedAt))
+    .limit(limit);
+}
+
+// ==================== CONTACT FUNCTIONS ====================
+
+export async function createContactSubmission(data: InsertContactSubmission): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.insert(contactSubmissions).values(data);
+}
+
+export async function getAllContactSubmissions() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(contactSubmissions).orderBy(desc(contactSubmissions.createdAt));
+}
+
+export async function markContactAsRead(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(contactSubmissions).set({ read: true }).where(eq(contactSubmissions.id, id));
+}
+
+export async function deleteContactSubmission(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(contactSubmissions).where(eq(contactSubmissions.id, id));
+}

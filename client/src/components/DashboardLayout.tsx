@@ -27,10 +27,16 @@ import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 
-const menuItems = [
-  { icon: LayoutDashboard, label: "Page 1", path: "/" },
-  { icon: Users, label: "Page 2", path: "/some-path" },
+const defaultMenuItems = [
+  { icon: LayoutDashboard, label: "Dashboard", path: "/" },
 ];
+
+type MenuItem = {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  href?: string;
+  path?: string;
+};
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
 const DEFAULT_WIDTH = 280;
@@ -39,9 +45,17 @@ const MAX_WIDTH = 480;
 
 export default function DashboardLayout({
   children,
+  navItems,
+  title = "Dashboard",
 }: {
   children: React.ReactNode;
+  navItems?: MenuItem[];
+  title?: string;
 }) {
+  const menuItems = navItems?.map(item => ({
+    ...item,
+    path: item.href || item.path || "/",
+  })) || defaultMenuItems;
   const [sidebarWidth, setSidebarWidth] = useState(() => {
     const saved = localStorage.getItem(SIDEBAR_WIDTH_KEY);
     return saved ? parseInt(saved, 10) : DEFAULT_WIDTH;
@@ -90,7 +104,7 @@ export default function DashboardLayout({
         } as CSSProperties
       }
     >
-      <DashboardLayoutContent setSidebarWidth={setSidebarWidth}>
+      <DashboardLayoutContent setSidebarWidth={setSidebarWidth} menuItems={menuItems} title={title}>
         {children}
       </DashboardLayoutContent>
     </SidebarProvider>
@@ -100,11 +114,15 @@ export default function DashboardLayout({
 type DashboardLayoutContentProps = {
   children: React.ReactNode;
   setSidebarWidth: (width: number) => void;
+  menuItems: Array<{ icon: React.ComponentType<{ className?: string }>; label: string; path: string }>;
+  title: string;
 };
 
 function DashboardLayoutContent({
   children,
   setSidebarWidth,
+  menuItems,
+  title,
 }: DashboardLayoutContentProps) {
   const { user, logout } = useAuth();
   const [location, setLocation] = useLocation();
@@ -171,7 +189,7 @@ function DashboardLayoutContent({
               {!isCollapsed ? (
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="font-semibold tracking-tight truncate">
-                    Navigation
+                    {title}
                   </span>
                 </div>
               ) : null}
