@@ -1,0 +1,34 @@
+{
+  "query": "SHOW TABLES;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user JmMmfJyACb82Q1K.1778369c6e1d --database 4XRQMDgKnjQJFfMtfJU5D3 --execute SHOW TABLES;",
+  "rows": [
+    {
+      "Tables_in_4XRQMDgKnjQJFfMtfJU5D3": "__drizzle_migrations"
+    },
+    {
+      "Tables_in_4XRQMDgKnjQJFfMtfJU5D3": "categories"
+    },
+    {
+      "Tables_in_4XRQMDgKnjQJFfMtfJU5D3": "contact_submissions"
+    },
+    {
+      "Tables_in_4XRQMDgKnjQJFfMtfJU5D3": "post_gallery_images"
+    },
+    {
+      "Tables_in_4XRQMDgKnjQJFfMtfJU5D3": "post_tags"
+    },
+    {
+      "Tables_in_4XRQMDgKnjQJFfMtfJU5D3": "posts"
+    },
+    {
+      "Tables_in_4XRQMDgKnjQJFfMtfJU5D3": "tags"
+    },
+    {
+      "Tables_in_4XRQMDgKnjQJFfMtfJU5D3": "users"
+    }
+  ],
+  "messages": [],
+  "stdout": "Tables_in_4XRQMDgKnjQJFfMtfJU5D3\n__drizzle_migrations\ncategories\ncontact_submissions\npost_gallery_images\npost_tags\nposts\ntags\nusers\n",
+  "stderr": "",
+  "execution_time_ms": 52
+}

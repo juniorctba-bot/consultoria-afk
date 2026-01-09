@@ -1,0 +1,42 @@
+{
+  "query": "SELECT id, name FROM tags ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user JmMmfJyACb82Q1K.1778369c6e1d --database 4XRQMDgKnjQJFfMtfJU5D3 --execute SELECT id, name FROM tags ORDER BY id;",
+  "rows": [
+    {
+      "id": "60001",
+      "name": "Dicas"
+    },
+    {
+      "id": "60002",
+      "name": "PME"
+    },
+    {
+      "id": "60003",
+      "name": "Estratégia"
+    },
+    {
+      "id": "60004",
+      "name": "Crescimento"
+    },
+    {
+      "id": "60005",
+      "name": "Controle"
+    },
+    {
+      "id": "60006",
+      "name": "Eficiência"
+    },
+    {
+      "id": "60007",
+      "name": "Gestão"
+    },
+    {
+      "id": "60008",
+      "name": "Finanças"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\n60001\tDicas\n60002\tPME\n60003\tEstratégia\n60004\tCrescimento\n60005\tControle\n60006\tEficiência\n60007\tGestão\n60008\tFinanças\n",
+  "stderr": "",
+  "execution_time_ms": 62
+}

@@ -1,0 +1,65 @@
+{
+  "query": "SELECT p.id, p.title, c.name as categoria FROM posts p LEFT JOIN categories c ON p.categoryId = c.id ORDER BY p.id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user JmMmfJyACb82Q1K.1778369c6e1d --database 4XRQMDgKnjQJFfMtfJU5D3 --execute SELECT p.id, p.title, c.name as categoria FROM posts p LEFT JOIN categories c ON p.categoryId = c.id ORDER BY p.id;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "Tempo é Dinheiro: Por que Políticas Financeiras Eficientes Transformam Empresas",
+      "categoria": "Processos Financeiros"
+    },
+    {
+      "id": "2",
+      "title": "Trocar o Gestor Financeiro Sem Travar o Crescimento: É Possível?",
+      "categoria": "Gestão Financeira"
+    },
+    {
+      "id": "3",
+      "title": "Revisão de Processos Financeiros: O Segredo para Mais Controle, Eficiência e Crescimento Sustentável",
+      "categoria": "Processos Financeiros"
+    },
+    {
+      "id": "4",
+      "title": "FIDC: Reduza Tributos e Amplie o Fluxo de Caixa da Sua Empresa",
+      "categoria": "FIDC"
+    },
+    {
+      "id": "5",
+      "title": "Como uma Estrutura Financeira Sólida Garante a Sobrevivência da Sua Empresa em Tempos de Crise",
+      "categoria": "Planejamento Financeiro"
+    },
+    {
+      "id": "6",
+      "title": "Contas a Pagar e a Receber: Como Otimizar a Gestão e Melhorar o Resultado Operacional",
+      "categoria": "Processos Financeiros"
+    },
+    {
+      "id": "7",
+      "title": "O Gestor Financeiro Ideal: Características Essenciais e o Desafio de Encontrar o Profissional Certo",
+      "categoria": "Gestão Financeira"
+    },
+    {
+      "id": "8",
+      "title": "Controle Financeiro por Centro de Custo: Como Aumentar a Visibilidade e a Eficiência da Gestão",
+      "categoria": "Gestão Financeira"
+    },
+    {
+      "id": "9",
+      "title": "O Fluxo de Caixa: Realeza das Finanças Empresariais",
+      "categoria": "Fluxo de Caixa"
+    },
+    {
+      "id": "10",
+      "title": "Como Criar uma Régua de Cobrança Eficiente e Reduzir a Inadimplência na sua Empresa",
+      "categoria": "Fluxo de Caixa"
+    },
+    {
+      "id": "11",
+      "title": "Organização na Cobrança: Como Evitar Perdas Financeiras e Melhorar o Caixa",
+      "categoria": "Fluxo de Caixa"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tcategoria\n1\tTempo é Dinheiro: Por que Políticas Financeiras Eficientes Transformam Empresas\tProcessos Financeiros\n2\tTrocar o Gestor Financeiro Sem Travar o Crescimento: É Possível?\tGestão Financeira\n3\tRevisão de Processos Financeiros: O Segredo para Mais Controle, Eficiência e Crescimento Sustentável\tProcessos Financeiros\n4\tFIDC: Reduza Tributos e Amplie o Fluxo de Caixa da Sua Empresa\tFIDC\n5\tComo uma Estrutura Financeira Sólida Garante a Sobrevivência da Sua Empresa em Tempos de Crise\tPlanejamento Financeiro\n6\tContas a Pagar e a Receber: Como Otimizar a Gestão e Melhorar o Resultado Operacional\tProcessos Financeiros\n7\tO Gestor Financeiro Ideal: Características Essenciais e o Desafio de Encontrar o Profissional Certo\tGestão Financeira\n8\tControle Financeiro por Centro de Custo: Como Aumentar a Visibilidade e a Eficiência da Gestão\tGestão Financeira\n9\tO Fluxo de Caixa: Realeza das Finanças Empresariais\tFluxo de Caixa\n10\tComo Criar uma Régua de Cobrança Eficiente e Reduzir a Inadimplência na sua Empresa\tFluxo de Caixa\n11\tOrganização na Cobrança: Como Evitar Perdas Financeiras e Melhorar o Caixa\tFluxo de Caixa\n",
+  "stderr": "",
+  "execution_time_ms": 64
+}

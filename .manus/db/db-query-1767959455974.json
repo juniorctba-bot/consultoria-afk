@@ -1,0 +1,66 @@
+{
+  "query": "SELECT * FROM tags;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user JmMmfJyACb82Q1K.1778369c6e1d --database 4XRQMDgKnjQJFfMtfJU5D3 --execute SELECT * FROM tags;",
+  "rows": [
+    {
+      "id": "60001",
+      "name": "Dicas",
+      "slug": "dicas",
+      "color": "#FFCE00",
+      "createdAt": "2026-01-09 11:49:54"
+    },
+    {
+      "id": "60002",
+      "name": "PME",
+      "slug": "pme",
+      "color": "#686868",
+      "createdAt": "2026-01-09 11:49:54"
+    },
+    {
+      "id": "60003",
+      "name": "Estratégia",
+      "slug": "estrategia",
+      "color": "#2563eb",
+      "createdAt": "2026-01-09 11:49:54"
+    },
+    {
+      "id": "60004",
+      "name": "Crescimento",
+      "slug": "crescimento",
+      "color": "#16a34a",
+      "createdAt": "2026-01-09 11:49:54"
+    },
+    {
+      "id": "60005",
+      "name": "Controle",
+      "slug": "controle",
+      "color": "#dc2626",
+      "createdAt": "2026-01-09 11:49:54"
+    },
+    {
+      "id": "60006",
+      "name": "Eficiência",
+      "slug": "eficiencia",
+      "color": "#9333ea",
+      "createdAt": "2026-01-09 11:49:54"
+    },
+    {
+      "id": "60007",
+      "name": "Gestão",
+      "slug": "gestao",
+      "color": "#ea580c",
+      "createdAt": "2026-01-09 11:49:54"
+    },
+    {
+      "id": "60008",
+      "name": "Finanças",
+      "slug": "financas",
+      "color": "#0891b2",
+      "createdAt": "2026-01-09 11:49:54"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tslug\tcolor\tcreatedAt\n60001\tDicas\tdicas\t#FFCE00\t2026-01-09 11:49:54\n60002\tPME\tpme\t#686868\t2026-01-09 11:49:54\n60003\tEstratégia\testrategia\t#2563eb\t2026-01-09 11:49:54\n60004\tCrescimento\tcrescimento\t#16a34a\t2026-01-09 11:49:54\n60005\tControle\tcontrole\t#dc2626\t2026-01-09 11:49:54\n60006\tEficiência\teficiencia\t#9333ea\t2026-01-09 11:49:54\n60007\tGestão\tgestao\t#ea580c\t2026-01-09 11:49:54\n60008\tFinanças\tfinancas\t#0891b2\t2026-01-09 11:49:54\n",
+  "stderr": "",
+  "execution_time_ms": 52
+}

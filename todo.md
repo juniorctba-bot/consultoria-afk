@@ -63,3 +63,7 @@
 
 ## Imagens dos Posts
 - [x] Adicionar imagens de destaque aos posts existentes (11 posts com imagens)
+
+## Tags do Blog
+- [x] Criar tags: Dicas, PME, Estratégia, Crescimento, Controle, Eficiência, Gestão, Finanças
+- [x] Associar tags aos 11 posts existentes
