@@ -60,3 +60,6 @@
 - [x] Criar página de resultados de busca
 - [x] Implementar busca por título, conteúdo e resumo
 - [x] Destacar termos buscados nos resultados
+
+## Imagens dos Posts
+- [x] Adicionar imagens de destaque aos posts existentes (11 posts com imagens)

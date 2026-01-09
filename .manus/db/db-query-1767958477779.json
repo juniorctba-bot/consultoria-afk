@@ -1,0 +1,9 @@
+{
+  "query": "DELETE FROM tags WHERE name LIKE '%Test%' OR name LIKE '%Updated%' OR name LIKE '%Slug%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user JmMmfJyACb82Q1K.1778369c6e1d --database 4XRQMDgKnjQJFfMtfJU5D3 --execute DELETE FROM tags WHERE name LIKE '%Test%' OR name LIKE '%Updated%' OR name LIKE '%Slug%';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 73
+}

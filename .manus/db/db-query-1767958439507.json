@@ -1,0 +1,65 @@
+{
+  "query": "SELECT id, title, imageUrl FROM posts ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user JmMmfJyACb82Q1K.1778369c6e1d --database 4XRQMDgKnjQJFfMtfJU5D3 --execute SELECT id, title, imageUrl FROM posts ORDER BY id;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "Tempo é Dinheiro: Por que Políticas Financeiras Eficientes Transformam Empresas",
+      "imageUrl": "/images/gestao-financeira.webp"
+    },
+    {
+      "id": "2",
+      "title": "Trocar o Gestor Financeiro Sem Travar o Crescimento: É Possível?",
+      "imageUrl": "/images/reuniao-financeira.jpg"
+    },
+    {
+      "id": "3",
+      "title": "Revisão de Processos Financeiros: O Segredo para Mais Controle, Eficiência e Crescimento Sustentável",
+      "imageUrl": "/images/escritorio-contabil.jpg"
+    },
+    {
+      "id": "4",
+      "title": "FIDC: Reduza Tributos e Amplie o Fluxo de Caixa da Sua Empresa",
+      "imageUrl": "/images/consultoria-financeira.jpg"
+    },
+    {
+      "id": "5",
+      "title": "Como uma Estrutura Financeira Sólida Garante a Sobrevivência da Sua Empresa em Tempos de Crise",
+      "imageUrl": "/images/sucesso-financeiro.jpg"
+    },
+    {
+      "id": "6",
+      "title": "Contas a Pagar e a Receber: Como Otimizar a Gestão e Melhorar o Resultado Operacional",
+      "imageUrl": "/images/contas-pagar-receber.png"
+    },
+    {
+      "id": "7",
+      "title": "O Gestor Financeiro Ideal: Características Essenciais e o Desafio de Encontrar o Profissional Certo",
+      "imageUrl": "/images/gestao-financeira-2.jpg"
+    },
+    {
+      "id": "8",
+      "title": "Controle Financeiro por Centro de Custo: Como Aumentar a Visibilidade e a Eficiência da Gestão",
+      "imageUrl": "/images/planejamento-financeiro.jpg"
+    },
+    {
+      "id": "9",
+      "title": "O Fluxo de Caixa: Realeza das Finanças Empresariais",
+      "imageUrl": "/images/fluxo-caixa.png"
+    },
+    {
+      "id": "10",
+      "title": "Como Criar uma Régua de Cobrança Eficiente e Reduzir a Inadimplência na sua Empresa",
+      "imageUrl": "/images/contas-pagar-receber-2.png"
+    },
+    {
+      "id": "11",
+      "title": "Organização na Cobrança: Como Evitar Perdas Financeiras e Melhorar o Caixa",
+      "imageUrl": "/images/consultoria-pessoal.webp"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\timageUrl\n1\tTempo é Dinheiro: Por que Políticas Financeiras Eficientes Transformam Empresas\t/images/gestao-financeira.webp\n2\tTrocar o Gestor Financeiro Sem Travar o Crescimento: É Possível?\t/images/reuniao-financeira.jpg\n3\tRevisão de Processos Financeiros: O Segredo para Mais Controle, Eficiência e Crescimento Sustentável\t/images/escritorio-contabil.jpg\n4\tFIDC: Reduza Tributos e Amplie o Fluxo de Caixa da Sua Empresa\t/images/consultoria-financeira.jpg\n5\tComo uma Estrutura Financeira Sólida Garante a Sobrevivência da Sua Empresa em Tempos de Crise\t/images/sucesso-financeiro.jpg\n6\tContas a Pagar e a Receber: Como Otimizar a Gestão e Melhorar o Resultado Operacional\t/images/contas-pagar-receber.png\n7\tO Gestor Financeiro Ideal: Características Essenciais e o Desafio de Encontrar o Profissional Certo\t/images/gestao-financeira-2.jpg\n8\tControle Financeiro por Centro de Custo: Como Aumentar a Visibilidade e a Eficiência da Gestão\t/images/planejamento-financeiro.jpg\n9\tO Fluxo de Caixa: Realeza das Finanças Empresariais\t/images/fluxo-caixa.png\n10\tComo Criar uma Régua de Cobrança Eficiente e Reduzir a Inadimplência na sua Empresa\t/images/contas-pagar-receber-2.png\n11\tOrganização na Cobrança: Como Evitar Perdas Financeiras e Melhorar o Caixa\t/images/consultoria-pessoal.webp\n",
+  "stderr": "",
+  "execution_time_ms": 52
+}
