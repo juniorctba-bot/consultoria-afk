@@ -70,3 +70,11 @@
 
 ## Ajustes Visuais
 - [x] Ajustar posicionamento da imagem hero para mostrar rosto completo da consultora
+
+## Autenticação do Admin
+- [x] Implementar autenticação por senha no painel admin
+- [x] Testar acesso com senha AFK@2309
+
+## Conteúdo Adicional
+- [ ] Adicionar mais posts ao blog
+- [ ] Adicionar imagens à galeria dos posts existentes

@@ -38,6 +38,29 @@ export const appRouter = router({
     }),
   }),
 
+  adminAuth: router({
+    verifyPassword: publicProcedure
+      .input(z.object({ password: z.string() }))
+      .mutation(async ({ input, ctx }) => {
+        const isValid = await db.verifyAdminPassword(input.password);
+        if (!isValid) {
+          throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Senha inválida' });
+        }
+        ctx.res.cookie('admin_authenticated', 'true', {
+          httpOnly: true,
+          secure: true,
+          sameSite: 'none',
+          maxAge: 24 * 60 * 60 * 1000,
+        });
+        return { success: true };
+      }),
+    
+    logout: publicProcedure.mutation(({ ctx }) => {
+      ctx.res.clearCookie('admin_authenticated');
+      return { success: true };
+    }),
+  }),
+
   // ==================== CATEGORIES ====================
   categories: router({
     list: publicProcedure.query(async () => {
@@ -405,3 +428,6 @@ export const appRouter = router({
 });
 
 export type AppRouter = typeof appRouter;
+
+
+// Adicionar após o router de auth existente, antes de categories

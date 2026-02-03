@@ -111,3 +111,17 @@ export const postTags = mysqlTable("post_tags", {
 
 export type PostTag = typeof postTags.$inferSelect;
 export type InsertPostTag = typeof postTags.$inferInsert;
+
+/**
+ * Admin password for blog management
+ */
+export const adminSettings = mysqlTable("admin_settings", {
+  id: int("id").autoincrement().primaryKey(),
+  key: varchar("key", { length: 100 }).notNull().unique(),
+  value: text("value").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AdminSetting = typeof adminSettings.$inferSelect;
+export type InsertAdminSetting = typeof adminSettings.$inferInsert;

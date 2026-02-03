@@ -1,5 +1,6 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
+import { useLocation } from "wouter";
 import DashboardLayout from "@/components/DashboardLayout";
 import { 
   FileText, 
@@ -43,6 +44,14 @@ const navItems = [
 
 export default function Admin() {
   const { user, loading, isAuthenticated } = useAuth();
+  const [, setLocation] = useLocation();
+  const [adminAuth, setAdminAuth] = useState(false);
+
+  // Check if user is authenticated in admin
+  if (!adminAuth) {
+    setLocation('/admin/login');
+    return null;
+  }
 
   if (loading) {
     return (

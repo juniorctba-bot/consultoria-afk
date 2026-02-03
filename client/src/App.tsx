@@ -16,6 +16,7 @@ import BlogTag from "./pages/BlogTag";
 import BlogSearch from "./pages/BlogSearch";
 
 // Admin pages
+import AdminLogin from "./pages/AdminLogin";
 import Admin from "./pages/Admin";
 import AdminPosts from "./pages/AdminPosts";
 import AdminPostEdit from "./pages/AdminPostEdit";
@@ -37,6 +38,7 @@ function Router() {
       <Route path="/blog/:slug" component={BlogPost} />
       
       {/* Admin routes */}
+      <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin" component={Admin} />
       <Route path="/admin/posts" component={AdminPosts} />
       <Route path="/admin/posts/:id" component={AdminPostEdit} />

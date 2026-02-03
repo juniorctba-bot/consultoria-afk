@@ -1,6 +1,6 @@
 import { eq, and, desc, sql, or, like } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, categories, posts, contactSubmissions, postGalleryImages, tags, postTags, InsertCategory, InsertPost, InsertContactSubmission, InsertPostGalleryImage, InsertTag, InsertPostTag, Category, Post, PostGalleryImage, Tag, PostTag } from "../drizzle/schema";
+import { InsertUser, users, categories, posts, contactSubmissions, postGalleryImages, tags, postTags, adminSettings, InsertCategory, InsertPost, InsertContactSubmission, InsertPostGalleryImage, InsertTag, InsertPostTag, Category, Post, PostGalleryImage, Tag, PostTag, AdminSetting } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -447,4 +447,31 @@ export async function searchPosts(query: string): Promise<Post[]> {
       )
     ))
     .orderBy(desc(posts.publishedAt));
+}
+
+// ==================== ADMIN SETTINGS FUNCTIONS ====================
+
+export async function getAdminSetting(key: string): Promise<string | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(adminSettings).where(eq(adminSettings.key, key)).limit(1);
+  return result.length > 0 ? result[0].value : undefined;
+}
+
+export async function setAdminSetting(key: string, value: string): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const existing = await getAdminSetting(key);
+  if (existing) {
+    await db.update(adminSettings).set({ value }).where(eq(adminSettings.key, key));
+  } else {
+    await db.insert(adminSettings).values({ key, value });
+  }
+}
+
+export async function verifyAdminPassword(password: string): Promise<boolean> {
+  const storedPassword = await getAdminSetting('admin_password');
+  return storedPassword === password;
 }

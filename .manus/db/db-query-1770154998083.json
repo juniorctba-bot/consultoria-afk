@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO admin_settings (`key`, `value`) VALUES ('admin_password', 'AFK@2309')",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user JmMmfJyACb82Q1K.1778369c6e1d --database 4XRQMDgKnjQJFfMtfJU5D3 --execute INSERT INTO admin_settings (`key`, `value`) VALUES ('admin_password', 'AFK@2309')",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 70
+}
