@@ -72,8 +72,11 @@
 - [x] Ajustar posicionamento da imagem hero para mostrar rosto completo da consultora
 
 ## Autenticação do Admin
-- [x] Implementar autenticação por senha no painel admin
-- [x] Testar acesso com senha AFK@2309
+- [x] Implementar autenticação por senha no painel admin (senha: AFK@2309)
+- [x] Página de login com formulário de senha
+- [x] Proteção de rotas do admin com verificação de autenticação
+- [x] Funcionalidade de logout
+- [x] Testes unitários para autenticação (4 testes passando)
 
 ## Conteúdo Adicional
 - [ ] Adicionar mais posts ao blog

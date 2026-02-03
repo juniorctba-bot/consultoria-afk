@@ -1,5 +1,7 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
+import { useLocation } from "wouter";
+import { useEffect } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { 
   FileText, 
@@ -50,32 +52,19 @@ const navItems = [
 ];
 
 export default function AdminPosts() {
-  const { user, loading, isAuthenticated } = useAuth();
+  const [, setLocation] = useLocation();
+  const [adminAuth] = useState(() => {
+    return localStorage.getItem('admin_authenticated') === 'true';
+  });
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-afk-yellow" />
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!adminAuth) {
+      setLocation('/admin/login');
+    }
+  }, [adminAuth, setLocation]);
 
-  if (!isAuthenticated || user?.role !== "admin") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center p-8 bg-white rounded-xl shadow-lg max-w-md">
-          <h1 className="text-2xl font-heading text-afk-gray-dark mb-4">
-            Acesso Restrito
-          </h1>
-          <p className="text-afk-gray mb-6">
-            Faça login como administrador para acessar esta área.
-          </p>
-          <a href={getLoginUrl()} className="btn-primary inline-block">
-            Fazer Login
-          </a>
-        </div>
-      </div>
-    );
+  if (!adminAuth) {
+    return null;
   }
 
   return (
@@ -101,7 +90,7 @@ function PostsList() {
     }
   });
 
-  const filteredPosts = posts?.filter(post => 
+  const filteredPosts = posts?.filter((post: any) => 
     post.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -152,7 +141,7 @@ function PostsList() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredPosts.map((post) => (
+             {filteredPosts?.map((post: any) => (
                 <TableRow key={post.id}>
                   <TableCell className="font-medium">{post.title}</TableCell>
                   <TableCell>{post.category?.name || "-"}</TableCell>

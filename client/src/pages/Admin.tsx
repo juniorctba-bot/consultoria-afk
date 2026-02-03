@@ -1,6 +1,7 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
+import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { 
   FileText, 
@@ -18,10 +19,9 @@ import {
   Tag
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { trpc } from "@/lib/trpc";
-import { useState } from "react";
 import { Link } from "wouter";
 import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -45,11 +45,18 @@ const navItems = [
 export default function Admin() {
   const { user, loading, isAuthenticated } = useAuth();
   const [, setLocation] = useLocation();
-  const [adminAuth, setAdminAuth] = useState(false);
+  const [adminAuth, setAdminAuth] = useState(() => {
+    return localStorage.getItem('admin_authenticated') === 'true';
+  });
 
-  // Check if user is authenticated in admin
+  useEffect(() => {
+    // Check if user is authenticated in admin
+    if (!adminAuth) {
+      setLocation('/admin/login');
+    }
+  }, [adminAuth, setLocation]);
+
   if (!adminAuth) {
-    setLocation('/admin/login');
     return null;
   }
 
@@ -79,39 +86,27 @@ export default function Admin() {
     );
   }
 
-  if (user?.role !== "admin") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center p-8 bg-white rounded-xl shadow-lg max-w-md">
-          <h1 className="text-2xl font-heading text-afk-gray-dark mb-4">
-            Acesso Negado
-          </h1>
-          <p className="text-afk-gray mb-6">
-            Você não tem permissão para acessar esta área.
-          </p>
-          <Link href="/" className="btn-primary inline-block">
-            Voltar ao Site
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  const handleLogout = () => {
+    localStorage.removeItem('admin_authenticated');
+    setAdminAuth(false);
+    setLocation('/admin/login');
+  };
 
   return (
     <DashboardLayout navItems={navItems} title="AFK Admin">
-      <AdminDashboard />
+      <AdminDashboard handleLogout={handleLogout} />
     </DashboardLayout>
   );
 }
 
-function AdminDashboard() {
+function AdminDashboard({ handleLogout }: { handleLogout: () => void }) {
   const { data: posts } = trpc.posts.listAll.useQuery();
   const { data: categories } = trpc.categories.list.useQuery();
   const { data: contacts } = trpc.contact.list.useQuery();
 
-  const publishedPosts = posts?.filter(p => p.published).length || 0;
-  const draftPosts = posts?.filter(p => !p.published).length || 0;
-  const unreadContacts = contacts?.filter(c => !c.read).length || 0;
+  const publishedPosts = posts?.filter((p: any) => p.published).length || 0;
+  const draftPosts = posts?.filter((p: any) => !p.published).length || 0;
+  const unreadContacts = contacts?.filter((c: any) => !c.read).length || 0;
 
   const stats = [
     { label: "Posts Publicados", value: publishedPosts, icon: Eye, color: "bg-green-100 text-green-600" },
@@ -158,7 +153,7 @@ function AdminDashboard() {
           </Link>
         </div>
         <div className="divide-y divide-gray-100">
-          {posts?.slice(0, 5).map((post) => (
+          {posts?.slice(0, 5).map((post: any) => (
             <div key={post.id} className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className={`w-2 h-2 rounded-full ${post.published ? 'bg-green-500' : 'bg-yellow-500'}`} />
@@ -191,7 +186,7 @@ function AdminDashboard() {
           </Link>
         </div>
         <div className="divide-y divide-gray-100">
-          {contacts?.slice(0, 5).map((contact) => (
+          {contacts?.slice(0, 5).map((contact: any) => (
             <div key={contact.id} className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 {contact.read ? (

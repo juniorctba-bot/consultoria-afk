@@ -7,6 +7,7 @@ import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import * as db from "../db";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -28,6 +29,17 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 }
 
 async function startServer() {
+  // Initialize admin password if not set
+  try {
+    const existingPassword = await db.getAdminSetting('admin_password');
+    if (!existingPassword) {
+      await db.setAdminSetting('admin_password', 'AFK@2309');
+      console.log('[Admin] Password initialized');
+    }
+  } catch (error) {
+    console.warn('[Admin] Failed to initialize password:', error);
+  }
+
   const app = express();
   const server = createServer(app);
   // Configure body parser with larger size limit for file uploads

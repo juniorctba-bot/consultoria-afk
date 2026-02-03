@@ -15,6 +15,7 @@ export default function AdminLogin() {
   
   const verifyPasswordMutation = trpc.adminAuth.verifyPassword.useMutation({
     onSuccess: () => {
+      localStorage.setItem('admin_authenticated', 'true');
       setLocation('/admin');
     },
     onError: (error) => {
@@ -25,6 +26,10 @@ export default function AdminLogin() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    if (!password) {
+      setError('Por favor, digite a senha');
+      return;
+    }
     verifyPasswordMutation.mutate({ password });
   };
 
@@ -74,8 +79,8 @@ export default function AdminLogin() {
 
             <Button
               type="submit"
-              className="w-full bg-[#FFCE00] text-black hover:bg-[#FFB800] font-semibold"
-              disabled={verifyPasswordMutation.isPending || !password}
+              className="w-full bg-afk-yellow text-gray-800 hover:bg-yellow-500 font-semibold"
+              disabled={verifyPasswordMutation.isPending}
             >
               {verifyPasswordMutation.isPending ? 'Verificando...' : 'Acessar'}
             </Button>
