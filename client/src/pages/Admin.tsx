@@ -1,5 +1,3 @@
-import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
@@ -10,13 +8,12 @@ import {
   LayoutDashboard,
   Plus,
   Edit,
-  Trash2,
   Eye,
   EyeOff,
-  Loader2,
   Mail,
   MailOpen,
-  Tag
+  Tag,
+  LogOut
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
@@ -43,7 +40,6 @@ const navItems = [
 ];
 
 export default function Admin() {
-  const { user, loading, isAuthenticated } = useAuth();
   const [, setLocation] = useLocation();
   const [adminAuth, setAdminAuth] = useState(() => {
     return localStorage.getItem('admin_authenticated') === 'true';
@@ -60,40 +56,13 @@ export default function Admin() {
     return null;
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-afk-yellow" />
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center p-8 bg-white rounded-xl shadow-lg max-w-md">
-          <h1 className="text-2xl font-heading text-afk-gray-dark mb-4">
-            Acesso Restrito
-          </h1>
-          <p className="text-afk-gray mb-6">
-            Faça login para acessar o painel administrativo.
-          </p>
-          <a href={getLoginUrl()} className="btn-primary inline-block">
-            Fazer Login
-          </a>
-        </div>
-      </div>
-    );
-  }
-
   const handleLogout = () => {
     localStorage.removeItem('admin_authenticated');
-    setAdminAuth(false);
     setLocation('/admin/login');
   };
 
   return (
-    <DashboardLayout navItems={navItems} title="AFK Admin">
+    <DashboardLayout navItems={navItems} title="AFK Admin - Painel de Postagens">
       <AdminDashboard handleLogout={handleLogout} />
     </DashboardLayout>
   );
@@ -119,12 +88,22 @@ function AdminDashboard({ handleLogout }: { handleLogout: () => void }) {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-heading text-afk-gray-dark">Dashboard</h1>
-        <Link href="/admin/posts/novo">
-          <Button className="btn-primary">
-            <Plus className="w-4 h-4 mr-2" />
-            Novo Post
+        <div className="flex items-center gap-4">
+          <Link href="/admin/posts/novo">
+            <Button className="btn-primary">
+              <Plus className="w-4 h-4 mr-2" />
+              Novo Post
+            </Button>
+          </Link>
+          <Button 
+            variant="outline" 
+            onClick={handleLogout}
+            className="flex items-center gap-2"
+          >
+            <LogOut className="w-4 h-4" />
+            Sair
           </Button>
-        </Link>
+        </div>
       </div>
 
       {/* Stats */}

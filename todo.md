@@ -97,3 +97,10 @@
 - [x] Adicionar link "ADMIN" na barra inferior (footer)
 - [x] Link direciona para https://consultoriaafk.manus.space/admin/login
 - [x] Link abre em nova aba
+
+
+## Autenticação Independente do Manus
+- [x] Remover dependência de login Manus para acessar admin
+- [x] Autenticação funciona apenas com senha AFK@2309
+- [x] Sem necessidade de conta Manus para postar
+- [x] Botão de logout adicionado ao painel
