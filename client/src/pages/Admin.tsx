@@ -1,6 +1,6 @@
 import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
-import DashboardLayout from "@/components/DashboardLayout";
+import AdminLayout from "@/components/AdminLayout";
 import { 
   FileText, 
   FolderOpen, 
@@ -62,9 +62,9 @@ export default function Admin() {
   };
 
   return (
-    <DashboardLayout navItems={navItems} title="AFK Admin - Painel de Postagens">
+    <AdminLayout navItems={navItems} title="Painel de Postagens" onLogout={handleLogout}>
       <AdminDashboard handleLogout={handleLogout} />
-    </DashboardLayout>
+    </AdminLayout>
   );
 }
 
