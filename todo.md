@@ -81,3 +81,8 @@
 ## Conteúdo Adicional
 - [ ] Adicionar mais posts ao blog
 - [ ] Adicionar imagens à galeria dos posts existentes
+
+## SSL e Domínio Customizado
+- [x] Configurar domínio customizado www.consultoriaafk.com.br via Manus Publish
+- [x] Validar certificado SSL (Let's Encrypt)
+- [x] Testar acesso sem avisos de segurança

@@ -87,7 +87,7 @@ export default function Sobre() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <img 
-                src="/images/ana-flavia.png" 
+                src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663029753860/gxUNjZiPuDnZuaxz.png" 
                 alt="Ana Flávia Krisanovski"
                 className="rounded-2xl shadow-xl"
               />
