@@ -143,7 +143,16 @@ export default function Footer() {
             <p className="text-gray-400 text-sm">
               © {currentYear} AFK Consultoria. Todos os direitos reservados.
             </p>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6">
+              <a
+                href="https://consultoriaafk.manus.space/admin/login"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-afk-yellow transition-colors text-sm font-medium"
+              >
+                ADMIN
+              </a>
+              <div className="flex items-center gap-4">
               <a
                 href="https://instagram.com/consultoriaafk"
                 target="_blank"
@@ -160,6 +169,7 @@ export default function Footer() {
               >
                 <Linkedin className="w-5 h-5" />
               </a>
+              </div>
             </div>
           </div>
         </div>

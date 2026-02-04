@@ -92,3 +92,8 @@
 - URL: https://consultoriaafk.manus.space/admin/login
 - Senha: AFK@2309
 - Todos os membros da equipe podem usar a mesma senha
+
+## Link ADMIN no Footer
+- [x] Adicionar link "ADMIN" na barra inferior (footer)
+- [x] Link direciona para https://consultoriaafk.manus.space/admin/login
+- [x] Link abre em nova aba
