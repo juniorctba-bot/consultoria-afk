@@ -86,3 +86,9 @@
 - [x] Configurar domínio customizado www.consultoriaafk.com.br via Manus Publish
 - [x] Validar certificado SSL (Let's Encrypt)
 - [x] Testar acesso sem avisos de segurança
+
+
+## Acesso ao Painel Admin
+- URL: https://consultoriaafk.manus.space/admin/login
+- Senha: AFK@2309
+- Todos os membros da equipe podem usar a mesma senha
