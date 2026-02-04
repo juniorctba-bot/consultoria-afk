@@ -1,6 +1,6 @@
-import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
-import DashboardLayout from "@/components/DashboardLayout";
+import AdminLayout from "@/components/AdminLayout";
+import { useLocation } from "wouter";
+import { useEffect, useState } from "react";
 import { 
   FileText, 
   FolderOpen, 
@@ -19,7 +19,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { trpc } from "@/lib/trpc";
-import { useState } from "react";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import {
@@ -56,38 +55,30 @@ const navItems = [
 ];
 
 export default function AdminCategorias() {
-  const { user, loading, isAuthenticated } = useAuth();
+  const [, setLocation] = useLocation();
+  const [adminAuth] = useState(() => {
+    return localStorage.getItem('admin_authenticated') === 'true';
+  });
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-afk-yellow" />
-      </div>
-    );
+  useEffect(() => {
+    if (!adminAuth) {
+      setLocation('/admin/login');
+    }
+  }, [adminAuth, setLocation]);
+
+  if (!adminAuth) {
+    return null;
   }
 
-  if (!isAuthenticated || user?.role !== "admin") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center p-8 bg-white rounded-xl shadow-lg max-w-md">
-          <h1 className="text-2xl font-heading text-afk-gray-dark mb-4">
-            Acesso Restrito
-          </h1>
-          <p className="text-afk-gray mb-6">
-            Faça login como administrador para acessar esta área.
-          </p>
-          <a href={getLoginUrl()} className="btn-primary inline-block">
-            Fazer Login
-          </a>
-        </div>
-      </div>
-    );
-  }
+  const handleLogout = () => {
+    localStorage.removeItem('admin_authenticated');
+    setLocation('/admin/login');
+  };
 
   return (
-    <DashboardLayout navItems={navItems} title="AFK Admin">
+    <AdminLayout navItems={navItems} title="Painel de Postagens" onLogout={handleLogout}>
       <CategoriasList />
-    </DashboardLayout>
+    </AdminLayout>
   );
 }
 

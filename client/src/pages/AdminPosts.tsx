@@ -2,7 +2,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
 import { useEffect } from "react";
-import DashboardLayout from "@/components/DashboardLayout";
+import AdminLayout from "@/components/AdminLayout";
 import { 
   FileText, 
   FolderOpen, 
@@ -67,10 +67,15 @@ export default function AdminPosts() {
     return null;
   }
 
+  const handleLogout = () => {
+    localStorage.removeItem('admin_authenticated');
+    setLocation('/admin/login');
+  };
+
   return (
-    <DashboardLayout navItems={navItems} title="AFK Admin">
+    <AdminLayout navItems={navItems} title="Painel de Postagens" onLogout={handleLogout}>
       <PostsList />
-    </DashboardLayout>
+    </AdminLayout>
   );
 }
 
